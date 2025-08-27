@@ -45,6 +45,4 @@ jobs:
 
       - name: Deploy to Render
         run: |
-          curl -X POST "https://api.render.com/deploy/srv-XXXXXXXXXXXX" \
-          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-          -H "Accept: application/json"
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
