@@ -1,0 +1,7 @@
+apiVersion:  v1
+kind: ConfigMap
+metadata:
+  name: django-api-configmap
+data:
+  PYTHONPATH: /app/projeto-django
+  DJANGO_SETTINGS_MODULE: myproject.settings
