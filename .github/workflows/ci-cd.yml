@@ -66,10 +66,13 @@ jobs:
               --set service.type=NodePort \
               --set ingress.enabled=false
 
-      # Mostrar recursos criados
+        # Mostrar recursos criados
       - name: Listar recursos Kubernetes
         run: |
+          echo "Aguardando 30 segundos para os pods e serviços ficarem prontos..."
+          sleep 30
           kubectl get pods,svc,ingress -A
+
 
       # Deploy render (opção 2)
       - name: Deploy to Render
