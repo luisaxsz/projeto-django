@@ -8,6 +8,7 @@ on:
 env:
   IMAGE_NAME: luisaxsz/api-tarefas-django
   TAG: latest
+  CLUSTER_NAME: django-cluster
 
 jobs:
   ci-cd:
@@ -43,13 +44,34 @@ jobs:
       - name: Push Docker image
         run: docker push $IMAGE_NAME:$TAG
 
+      #Kind cluster
+      - name: Criar cluster Kind
+        uses: helm/kind-action@v1.8.0
+        with:
+          cluster_name: ${{ env.CLUSTER_NAME }}
+
+        # Instalar healm
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+
+      - name: Carregar imagem Docker no Kind
+        run: |
+          kind load docker-image $IMAGE_NAME:$TAG --name $CLUSTER_NAME
+
       - name: Deploy com Helm
         run: |
-          helm upgrade --install django-api ./helm-chart \
-            --set image.repository=luisaxsz/api-tarefas-django \
-            --set image.tag=latest \
-            --set ingress.enabled=true
+            helm upgrade --install django-api ./helm-chart \
+              --set image.repository=$IMAGE_NAME \
+              --set image.tag=$TAG \
+              --set service.type=NodePort \
+              --set ingress.enabled=false
 
+      # Mostrar recursos criados
+      - name: Listar recursos Kubernetes
+        run: |
+          kubectl get pods,svc,ingress -A
+
+      # Deploy render (opção 2)
       - name: Deploy to Render
         run: |
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
