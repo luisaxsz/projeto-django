@@ -1,0 +1,65 @@
+services:
+
+  django:
+    build: .
+    container_name: django_app
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic-net
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.2
+    container_name: elasticsearch
+    networks:
+      - elastic-net
+    environment:
+      xpack.security.enabled: true
+      ELASTIC_USERNAME: kibana_system
+      ELASTIC_PASSWORD: senha123
+      discovery.type: single-node
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+      - .config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.2
+    container_name: kibana
+    networks:
+      - elastic-net
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      KIBANA_PASSWORD: senha123
+    ports:
+      - "5601:5601"
+    volumes:
+      - .config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    depends_on:
+        - elasticsearch
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.13.2
+    container_name: filebeat
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    volumes:
+      - .config/filebeat.yml:/usr/share/.config/.config.yml:ro
+      - ./logs:/app/logs:ro
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic-net
+
+networks:
+  elastic-net:
+    name: elastic-net
+
+volumes:
+  esdata:

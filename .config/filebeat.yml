@@ -1,0 +1,18 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - ./logs/django.log
+  json.keys_under_root: true
+  json.add_error_key: true
+
+output.elasticsearch:
+  username: kibana_system
+  password: senha123
+  hosts: ["http://elasticsearch:9200", "http://localhost:9200"]
+
+setup.kibana:
+  host: "http://kibana:5601"
+  username: kibana_system
+  password: senha123
+

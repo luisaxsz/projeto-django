@@ -1,0 +1,8 @@
+server.publicBaseUrl: "http://kibana:5601"
+server.host: "0.0.0.0"
+logging.root.level: debug
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "senha123"
+
+
