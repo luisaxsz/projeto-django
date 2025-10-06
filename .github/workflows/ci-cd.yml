@@ -60,7 +60,7 @@ jobs:
 
       - name: Deploy com Helm
         run: |
-            helm upgrade --install django-api ./helm-chart \
+            helm upgrade --install django-api ./helm \
               --set image.repository=$IMAGE_NAME \
               --set image.tag=$TAG \
               --set service.type=NodePort \
