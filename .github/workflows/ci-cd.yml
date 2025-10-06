@@ -46,7 +46,7 @@ jobs:
       - name: Deploy com Helm
         run: |
           helm upgrade --install django-api ./helm-chart \
-            --set image.repository=luisaxsz/django-api \
+            --set image.repository=luisaxsz/api-tarefas-django \
             --set image.tag=latest \
             --set ingress.enabled=true
 
