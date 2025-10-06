@@ -25,7 +25,7 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
       - .config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./alter-password-kibana.sh:/usr/share/elasticsearch/init-kibana-user.sh
+      - .config/scripts/kibana/alter-password-kibana.sh:/usr/share/elasticsearch/init-kibana-user.sh
     ports:
       - "9200:9200"
     command: >
