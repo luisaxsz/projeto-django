@@ -2,7 +2,7 @@
 # Espera o Elasticsearch iniciar completamente
 echo "Esperando Elasticsearch subir..."
 until curl -u elastic:senha123 -s http://elasticsearch:9200 >/dev/null; do
-  sleep 5
+  sleep 10
 done
 
 # Alterar a senha do usuário kibana_system

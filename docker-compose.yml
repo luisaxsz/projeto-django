@@ -29,9 +29,7 @@ services:
     ports:
       - "9200:9200"
     command: >
-      /bin/bash -c "/usr/local/bin/docker-entrypoint.sh elasticsearch &
-      /usr/share/elasticsearch/init-kibana-user.sh &
-      wait -n"
+      /bin/bash -c "/usr/share/elasticsearch/init-kibana-user.sh & exec /usr/local/bin/docker-entrypoint.sh"
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.2
