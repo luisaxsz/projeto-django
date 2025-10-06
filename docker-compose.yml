@@ -19,15 +19,19 @@ services:
       - elastic-net
     environment:
       xpack.security.enabled: true
-      ELASTIC_USERNAME: kibana_system
-      ELASTIC_PASSWORD: senha123
+      ELASTIC_USERNAME: elastic
+      ELASTIC_PASSWORD: elastic
       discovery.type: single-node
     volumes:
       - esdata:/usr/share/elasticsearch/data
       - .config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-
+      - ./alter-password-kibana.sh:/usr/share/elasticsearch/init-kibana-user.sh
     ports:
       - "9200:9200"
+    command: >
+      /bin/bash -c "/usr/local/bin/docker-entrypoint.sh elasticsearch &
+      /usr/share/elasticsearch/init-kibana-user.sh &
+      wait -n"
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.2
@@ -36,13 +40,14 @@ services:
       - elastic-net
     environment:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-      KIBANA_PASSWORD: senha123
+      KIBANA_PASSWORD: senha123 # é preciso fazer um curl (disponivel no projeto) para alterar a senha e poder usar
     ports:
       - "5601:5601"
     volumes:
       - .config/kibana.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
         - elasticsearch
+
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.13.2
