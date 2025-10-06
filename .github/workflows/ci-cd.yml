@@ -43,6 +43,13 @@ jobs:
       - name: Push Docker image
         run: docker push $IMAGE_NAME:$TAG
 
+      - name: Deploy com Helm
+        run: |
+          helm upgrade --install django-api ./helm-chart \
+            --set image.repository=luisaxsz/django-api \
+            --set image.tag=latest \
+            --set ingress.enabled=true
+
       - name: Deploy to Render
         run: |
           curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
