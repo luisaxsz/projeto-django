@@ -1,18 +1,30 @@
 filebeat.inputs:
-- type: log
-  enabled: true
-  paths:
-    - ./logs/django.log
-  json.keys_under_root: true
-  json.add_error_key: true
+  - type: log
+    enabled: true
+    paths:
+      - /app/logs/django.log
+    fields:
+      service: django_app
+    json.keys_under_root: true
+    json.add_error_key: true
+    json.message_key: message
+    multiline.pattern: '^\['
+    multiline.negate: true
+    multiline.match: after
 
 output.elasticsearch:
-  username: kibana_system
-  password: senha123
-  hosts: ["http://elasticsearch:9200", "http://localhost:9200"]
+  hosts: ["http://elasticsearch:9200"]
+  username: elastic
+  password: elastic
+  index: "django-logs-%{+yyyy.MM.dd}"
+  pipeline: "django_logs_pipeline"
 
 setup.kibana:
   host: "http://kibana:5601"
-  username: kibana_system
-  password: senha123
+  username: elastic
+  password: elastic
 
+setup.template.name: "django"
+setup.template.pattern: "django-logs-*"
+
+logging.level: info

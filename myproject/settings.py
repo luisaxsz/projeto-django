@@ -19,7 +19,10 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "json": {
-            "()": jsonlogger.JsonFormatter,
+            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "fmt": (
+                "timestamp method path status_code message client_ip server_ip"
+            ),
         },
     },
     "handlers": {
@@ -38,6 +41,7 @@ LOGGING = {
         },
     },
 }
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
