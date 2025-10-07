@@ -19,17 +19,15 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "json": {
-            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
-            "fmt": (
-                "timestamp method path status_code message client_ip server_ip"
-            ),
-        },
+        "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+        "fmt": "%(asctime)s %(levelname)s %(name)s %(message)s"
+    },
     },
     "handlers": {
         "file": {
             "level": "INFO",
             "class": "logging.FileHandler",
-            "filename": "/app/logs/django.log",
+            "filename": "./logs/django.log",
             "formatter": "json",
         },
     },
