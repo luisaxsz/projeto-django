@@ -1,0 +1,44 @@
+PUT _ingest/pipeline/django_logs_pipeline
+{
+  "description": "Parse Django JSON logs",
+  "processors": [
+    {
+      "json": {
+        "field": "message",
+        "add_to_root": true,
+        "ignore_failure": true
+      }
+    },
+    {
+      "grok": {
+        "field": "message",
+        "patterns": [
+          "\"(?<method>GET|POST|PUT|DELETE) /%{DATA:route} HTTP/%{NUMBER:http_version}\" %{NUMBER:status_code:int} %{NUMBER:response_size:int}"
+        ],
+        "ignore_failure": true
+      }
+    },
+    {
+      "remove": {
+        "field": "message",
+        "ignore_missing": true
+      }
+    }
+  ]
+}
+
+GET django-logs-*/_search?size=5
+GET django-logs-*/_mapping/field/method
+GET django-logs-*/_search
+{
+  "size": 0,
+  "aggs": {
+    "methods": {
+      "terms": {
+        "field": "method",
+        "size": 10
+      }
+    }
+  }
+}
+

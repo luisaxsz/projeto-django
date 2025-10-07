@@ -8,9 +8,7 @@ filebeat.inputs:
     json.keys_under_root: true
     json.add_error_key: true
     json.message_key: message
-    multiline.pattern: '^\['
-    multiline.negate: true
-    multiline.match: after
+
 
 output.elasticsearch:
   hosts: ["http://elasticsearch:9200"]
